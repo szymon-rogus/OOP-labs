@@ -1,0 +1,17 @@
+
+^
+java:S1126"AReplace this if-then-else statement by a single return statement.(áÓ‡…8…á‡Áœ.
+:
+java:S1116"Remove this empty statement.(Öü¬Ç8…á‡Áœ.
+L
+java:S1144~"0Remove this unused private "getRoomById" method.(ËïàE8…á‡Áœ.
+X
+java:S1144o"6Remove this unused private "checkForDirection" method.(Ò¥îÑÿÿÿÿÿ8…á‡Áœ.
+^
+java:S1126s"AReplace this if-then-else statement by a single return statement.(áÓ‡…8…á‡Áœ.
+J
+java:S1481",Remove this unused "counter" local variable.(ÂÒô½8…á‡Áœ.
+T
+java:S1751‚"6Remove this "return" statement or make it conditional.(İ§×å8…á‡Áœ.
+Q
+java:S1068P"/Remove this unused "currentMaze" private field.(…å£Çøÿÿÿÿ8…á‡Áœ.

@@ -1,0 +1,11 @@
+
+O
+java:S1481"-Remove this unused "mazeGame" local variable.(ƒÈüÿÿÿÿ8¢ôÌÁœ.
+P
+java:S1128"3Remove this unused import 'java.io.BufferedReader'.(€é²Å8åµÁœ.
+–
+java:S1130"yRemove the declaration of thrown exception 'java.lang.IllegalAccessException', as it cannot be thrown from method's body.(èğ¼¾8¥ŠÎÁœ.
+S
+java:S1128"6Remove this unused import 'java.io.InputStreamReader'.(ãˆÎÉ8åµÁœ.
+‰
+java:S1130"lRemove the declaration of thrown exception 'java.io.IOException', as it cannot be thrown from method's body.(èğ¼¾8¥ŠÎÁœ.

@@ -1,0 +1,9 @@
+
+E
+java:S1068$"(Remove this unused "from" private field.(Ã÷³Ë8€ÿ¸œ.
+—
+java:S1186"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(Šà¢‚
+g
+java:S4275"ERefactor this setter so that it actually refers to the field "room2".(Ğ­Åÿÿÿÿÿ8¢†óĞ•.
+H
+java:S1068%"&Remove this unused "to" private field.(ÆÉñ±ÿÿÿÿÿ8€ÿ¸œ.
