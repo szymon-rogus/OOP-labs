@@ -3,8 +3,8 @@ package pl.edu.agh.internetshop;
 import org.junit.jupiter.api.Test;
 import org.mockito.internal.matchers.Or;
 
-import java.lang.reflect.Array;
 import java.math.BigDecimal;
+import java.sql.Array;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -13,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockingDetails;
 import static pl.edu.agh.internetshop.util.CustomAssertions.assertBigDecimalCompareValue;
 
 public class OrderTest {
@@ -135,6 +136,15 @@ public class OrderTest {
 		return new Order(Collections.singletonList(product));
 	}
 
+
+	/** changes here **/
+	private Order getOrderWithCertainProductPrice(double productPriceValue, double discount) {
+		BigDecimal productPrice = BigDecimal.valueOf(productPriceValue);
+		Product product = mock(Product.class);
+		given(product.getPrice()).willReturn(productPrice);
+		return new Order(Collections.singletonList(product), BigDecimal.valueOf(discount));
+	}
+
 	@Test
 	public void testPriceWithTaxesWithoutRoundUp() {
 		// given
@@ -145,6 +155,19 @@ public class OrderTest {
 		// then
 		/** changes here **/
 		assertBigDecimalCompareValue(order.getPriceWithTaxes(), BigDecimal.valueOf(2.46)); // 2.44 PLN
+	}
+
+	/** new test **/
+	@Test
+	public void testPriceWithTaxesWithoutRoundUpWithDiscount() {
+		// given
+
+		// when
+		Order order = getOrderWithCertainProductPrice(2, 0.15); // 2 PLN
+
+		// then
+		/** changes here **/
+		assertBigDecimalCompareValue(order.getPriceWithTaxes(), BigDecimal.valueOf(2.09)); // 2.44 PLN
 	}
 
 	@Test
@@ -159,6 +182,19 @@ public class OrderTest {
 																							
 	}
 
+	/** new test **/
+	@Test
+	public void testPriceWithTaxesWithRoundDownWithDiscount() {
+		// given
+
+		// when
+		Order order = getOrderWithCertainProductPrice(6, 0.5); // 0.01 PLN
+
+		// then
+		assertBigDecimalCompareValue(order.getPriceWithTaxes(), BigDecimal.valueOf(3.69)); // 0.01 PLN
+
+	}
+
 	@Test
 	public void testPriceWithTaxesWithRoundUp() {
 		// given
@@ -169,6 +205,19 @@ public class OrderTest {
 		// then
 		assertBigDecimalCompareValue(order.getPriceWithTaxes(), BigDecimal.valueOf(0.04)); // 0.04 PLN
 																							
+	}
+
+	/** new test **/
+	@Test
+	public void testPriceWithTaxesWithRoundUpWithDiscount() {
+		// given
+
+		// when
+		Order order = getOrderWithCertainProductPrice(12, 0.3); // 0.03 PLN
+
+		// then
+		System.out.println(order.getPriceWithTaxes());
+		assertBigDecimalCompareValue(order.getPriceWithTaxes(), BigDecimal.valueOf(10.33)); // 0.04 PLN
 	}
 
 	@Test
