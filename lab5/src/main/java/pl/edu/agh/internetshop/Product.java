@@ -9,6 +9,8 @@ public class Product {
 	
     private final String name;
     private final BigDecimal price;
+    /** changes here **/
+    private BigDecimal discount = BigDecimal.valueOf(0);
 
     public Product(String name, BigDecimal price) {
         this.name = name;
@@ -16,11 +18,22 @@ public class Product {
         this.price.setScale(PRICE_PRECISION, ROUND_STRATEGY);
     }
 
+    /** changes here **/
+    public Product(String name, BigDecimal price, BigDecimal discount) {
+        this.name = name;
+        this.price = price;
+        this.price.setScale(PRICE_PRECISION, ROUND_STRATEGY);
+        if(discount.doubleValue() > 1.0 || discount.doubleValue() < 0.0)
+            throw new IllegalArgumentException("Discount out od possible range: " + discount);
+        this.discount = discount;
+    }
+
     public String getName() {
         return name;
     }
 
+    /** changes here **/
     public BigDecimal getPrice() {
-        return price;
+        return price.subtract(discount.multiply(price));
     }
 }

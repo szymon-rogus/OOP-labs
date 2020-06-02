@@ -1,6 +1,7 @@
 package pl.edu.agh.internetshop;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.internal.matchers.Or;
 
 import java.lang.reflect.Array;
 import java.math.BigDecimal;
@@ -83,18 +84,48 @@ public class OrderTest {
 	}
 
 	@Test
-	public void testGetPrice() throws Exception {
+	public void testGetPriceWithoutDiscount() throws Exception {
 		// given
-		BigDecimal expectedProductPrice = BigDecimal.valueOf(1000);
+		BigDecimal expectedOrderPrice = BigDecimal.valueOf(1000);
 		Product product = mock(Product.class);
-		given(product.getPrice()).willReturn(expectedProductPrice);
+		given(product.getPrice()).willReturn(expectedOrderPrice);
 		Order order = new Order(Collections.singletonList(product));
 
 		// when
-		BigDecimal actualProductPrice = order.getPrice();
+		BigDecimal actualOrderPrice = order.getPrice();
 
 		// then
-		assertBigDecimalCompareValue(expectedProductPrice, actualProductPrice);
+		assertBigDecimalCompareValue(expectedOrderPrice, actualOrderPrice);
+	}
+
+	/** new test **/
+	@Test
+	public void testGetPriceWithDiscount() {
+		// given
+		BigDecimal expectedOrderPrice = BigDecimal.valueOf(1000);
+		Product product = mock(Product.class);
+		given(product.getPrice()).willReturn(expectedOrderPrice);
+		BigDecimal discount = BigDecimal.valueOf(0.4);
+		Order order = new Order(Collections.singletonList(product), discount);
+
+		// when
+		BigDecimal actualOrderPrice = order.getPrice();
+
+		// then
+		assertBigDecimalCompareValue(expectedOrderPrice.subtract(discount.multiply(expectedOrderPrice)), actualOrderPrice);
+	}
+
+	/** new test **/
+	@Test
+	public void testIllegalOrderDiscount() {
+		// given
+		Product product1 = mock(Product.class);
+		Product product2 = mock(Product.class);
+
+		// when then
+		Product expectedProduct1 = mock(Product.class);
+		assertThrows(IllegalArgumentException.class, () -> new Order(Arrays.asList(product1, product2), BigDecimal.valueOf(1.1)));
+		assertThrows(IllegalArgumentException.class, () -> new Order(Arrays.asList(product1, product2), BigDecimal.valueOf(-0.4)));
 	}
 
 	private Order getOrderWithCertainProductPrice(double productPriceValue) {

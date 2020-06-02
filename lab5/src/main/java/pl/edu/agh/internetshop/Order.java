@@ -17,12 +17,24 @@ public class Order {
     private Shipment shipment;
     private ShipmentMethod shipmentMethod;
     private PaymentMethod paymentMethod;
+    private BigDecimal discount = BigDecimal.valueOf(0);
 
     public Order(List<Product> products) {
         /** changes here **/
         this.products = Objects.requireNonNull(products, "productList cannot be null");
         id = UUID.randomUUID();
         paid = false;
+    }
+
+    /** changes here **/
+    public Order(List<Product> products, BigDecimal discount) {
+        /** changes here **/
+        this.products = Objects.requireNonNull(products, "productList cannot be null");
+        id = UUID.randomUUID();
+        paid = false;
+        if(discount.doubleValue() > 1.0 || discount.doubleValue() < 0.0)
+            throw new IllegalArgumentException("Discount out od possible range: " + discount);
+        this.discount = discount;
     }
 
     public UUID getId() {
@@ -53,7 +65,7 @@ public class Order {
         for(Product product : products) {
             price = price.add(product.getPrice());
         }
-        return price;
+        return price.subtract(discount.multiply(price));
     }
 
     public BigDecimal getPriceWithTaxes() {

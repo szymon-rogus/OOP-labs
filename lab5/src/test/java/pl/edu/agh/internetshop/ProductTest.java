@@ -3,9 +3,11 @@ package pl.edu.agh.internetshop;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static pl.edu.agh.internetshop.util.CustomAssertions.assertBigDecimalCompareValue;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 
 public class ProductTest {
@@ -26,7 +28,7 @@ public class ProductTest {
     }
     
     @Test
-    public void testProductPrice() throws Exception{
+    public void testProductPriceWithoutDiscount() throws Exception{
         //given
     	
         // when
@@ -34,5 +36,28 @@ public class ProductTest {
         
         // then
         assertBigDecimalCompareValue(product.getPrice(), PRICE);
+    }
+
+    /** new test **/
+    @Test
+    public void testProductPriceWithDiscount() {
+	    // given
+        BigDecimal discount = BigDecimal.valueOf(0.68);
+
+        // when
+        Product product = new Product(NAME, PRICE, discount);
+
+        // then
+        System.out.println(product.getPrice());
+        System.out.println(PRICE.subtract(discount.multiply(PRICE)));
+        assertBigDecimalCompareValue(product.getPrice(), PRICE.subtract(discount.multiply(PRICE)));
+    }
+
+    /** new test **/
+    @Test
+    public void testIllegalDiscount() {
+        // when then
+        assertThrows(IllegalArgumentException.class, () -> new Product(NAME, PRICE, BigDecimal.valueOf(-0.1)));
+        assertThrows(IllegalArgumentException.class, () -> new Product(NAME, PRICE, BigDecimal.valueOf(1.2)));
     }
 }
