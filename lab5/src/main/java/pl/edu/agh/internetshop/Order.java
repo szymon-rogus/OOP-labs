@@ -95,6 +95,11 @@ public class Order {
         paid = moneyTransfer.isCommitted();
     }
 
+    /** new **/
+    public void addToHistory() {
+        OrdersHistory.add(this);
+    }
+
     public void setShipment(Shipment shipment) {
         this.shipment = shipment;
     }

@@ -48,8 +48,6 @@ public class ProductTest {
         Product product = new Product(NAME, PRICE, discount);
 
         // then
-        System.out.println(product.getPrice());
-        System.out.println(PRICE.subtract(discount.multiply(PRICE)));
         assertBigDecimalCompareValue(product.getPrice(), PRICE.subtract(discount.multiply(PRICE)));
     }
 

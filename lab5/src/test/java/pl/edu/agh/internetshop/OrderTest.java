@@ -1,11 +1,12 @@
 package pl.edu.agh.internetshop;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.internal.matchers.Or;
+import pl.edu.agh.internetshop.SearchStrategy.CompositeSearchStrategy;
+import pl.edu.agh.internetshop.SearchStrategy.PriceOrderStrategy;
 
 import java.math.BigDecimal;
-import java.sql.Array;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -13,13 +14,19 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.mockingDetails;
 import static pl.edu.agh.internetshop.util.CustomAssertions.assertBigDecimalCompareValue;
 
 public class OrderTest {
 
 	private Order getOrderWithMockedProduct() {
 		Product product = mock(Product.class);
+		return new Order(Collections.singletonList(product));
+	}
+
+	/** new **/
+	private Order getOrderWithMockedProduct(BigDecimal price) {
+		Product product = mock(Product.class);
+		given(product.getPrice()).willReturn(price);
 		return new Order(Collections.singletonList(product));
 	}
 
@@ -167,7 +174,7 @@ public class OrderTest {
 
 		// then
 		/** changes here **/
-		assertBigDecimalCompareValue(order.getPriceWithTaxes(), BigDecimal.valueOf(2.09)); // 2.44 PLN
+		assertBigDecimalCompareValue(order.getPriceWithTaxes(), BigDecimal.valueOf(2.09)); // 2.09 PLN
 	}
 
 	@Test
@@ -188,10 +195,10 @@ public class OrderTest {
 		// given
 
 		// when
-		Order order = getOrderWithCertainProductPrice(6, 0.5); // 0.01 PLN
+		Order order = getOrderWithCertainProductPrice(6, 0.5); // 3 PLN
 
 		// then
-		assertBigDecimalCompareValue(order.getPriceWithTaxes(), BigDecimal.valueOf(3.69)); // 0.01 PLN
+		assertBigDecimalCompareValue(order.getPriceWithTaxes(), BigDecimal.valueOf(3.69)); // 3.69 PLN
 
 	}
 
@@ -213,7 +220,7 @@ public class OrderTest {
 		// given
 
 		// when
-		Order order = getOrderWithCertainProductPrice(12, 0.3); // 0.03 PLN
+		Order order = getOrderWithCertainProductPrice(12, 0.3); // 8.4 PLN
 
 		// then
 		System.out.println(order.getPriceWithTaxes());
@@ -313,5 +320,38 @@ public class OrderTest {
 
 		// then
 		assertFalse(order.isPaid());
+	}
+
+	/** new test **/
+	@Test
+	public void testAddingToHistory() {
+		// given
+		Order order = getOrderWithMockedProduct();
+		OrdersHistory ordersHistory = mock(OrdersHistory.class);
+
+		// when
+		order.addToHistory();
+		order.addToHistory();
+
+		// then
+		assertEquals(OrdersHistory.getOrdersHistory().size(), 2);
+	}
+
+	/** new test **/
+	@Test
+	public void searchByPriceStrategies() {
+		// given
+		Order order1 = getOrderWithMockedProduct(BigDecimal.valueOf(100));
+		Order order2 = getOrderWithMockedProduct(BigDecimal.valueOf(100));
+		Order order3 = getOrderWithMockedProduct(BigDecimal.valueOf(400));
+		OrdersHistory ordersHistory = mock(OrdersHistory.class);
+		CompositeSearchStrategy compositeSearchStrategy = new CompositeSearchStrategy();
+
+		// when
+		Collection<Order> orderList = Arrays.asList(order1, order2, order3);
+		OrdersHistory.getSearchStrategy().addStrategy(new PriceOrderStrategy(BigDecimal.valueOf(100)));
+
+		// then
+		assertEquals(compositeSearchStrategy.filter(orderList).size(), 2);
 	}
 }
